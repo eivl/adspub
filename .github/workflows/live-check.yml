@@ -1,0 +1,30 @@
+name: Live page check
+
+# Parses the real Google page on a schedule so a format change is noticed
+# before users hit it. Failure here means the parser needs updating.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --locked
+      - name: Fetch and parse the live page
+        run: |
+          uv run adspub --refresh --json list | tee live.json
+          uv run adspub --offline latest
+      - name: Compare with the checked-in fixture
+        run: |
+          uv run adspub parse tests/fixtures/publisher.html > fixture.json
+          live=$(uv run adspub --offline latest)
+          fixture=$(python3 -c "import json;print(json.load(open('fixture.json'))['versions'][-1]['version'])")
+          echo "live latest: $live, fixture latest: $fixture"
+          if [ "$live" != "$fixture" ]; then
+            echo "::warning::The live page lists newer versions than tests/fixtures/publisher.html; consider refreshing the fixture."
+          fi

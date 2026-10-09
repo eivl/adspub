@@ -1,0 +1,56 @@
+name: Publish to PyPI
+
+# Publishes when a version tag is pushed, for example:
+#   uv version --bump minor   # or patch / major
+#   git commit -am "Release v0.2.0" && git tag v0.2.0 && git push --tags
+#
+# Requires a PyPI "trusted publisher" configured for this repository with
+# workflow name publish.yml and environment name pypi. No API token needed.
+
+on:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v7
+      - name: Check that the tag matches the package version
+        run: |
+          pkg="v$(uv version --short)"
+          if [ "$pkg" != "${GITHUB_REF_NAME}" ]; then
+            echo "tag ${GITHUB_REF_NAME} does not match pyproject version ${pkg}" >&2
+            exit 1
+          fi
+      - run: uv sync --group dev --locked
+      - run: uv run pytest
+      - run: uv build
+      - run: uvx twine check dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/adspub/
+    permissions:
+      id-token: write
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
