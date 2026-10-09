@@ -203,3 +203,13 @@ def test_cache_info_stale(cache_dir: Path, catalog: Catalog) -> None:
     info = json.loads(run("--json", "cache", "info").stdout)
     assert info["fresh"] is False
     assert "stale" in run("cache", "info").stdout
+
+
+def test_check_without_active_versions(cache_dir: Path, catalog: Catalog) -> None:
+    only_deprecated = catalog.model_copy(
+        update={"fetched_at": datetime.now(UTC), "versions": catalog.deprecated}
+    )
+    asyncio.run(write_cache(only_deprecated))
+    result = run("--offline", "check", "v202511")
+    assert result.exit_code == EXIT_ERROR
+    assert "no active versions" in result.output

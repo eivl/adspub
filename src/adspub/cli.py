@@ -295,7 +295,10 @@ def check(
             raise typer.Exit(2) from exc
 
     result = _load(opts)
-    checks: list[VersionCheck] = [result.catalog.check(v) for v in canonical]
+    try:
+        checks: list[VersionCheck] = [result.catalog.check(v) for v in canonical]
+    except LookupError as exc:
+        raise _fail(str(exc)) from exc
     exit_code = max(_STATUS_EXIT[c.status] for c in checks)
 
     if opts.json:
