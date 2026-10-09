@@ -1,6 +1,6 @@
 [project]
 name = "adspub"
-version = "0.1.0"
+version = "0.1.1"
 description = "Machine-readable view of the Google Ad Manager API version list, with a CLI for humans and AI agents"
 readme = "README.md"
 license = "MIT"

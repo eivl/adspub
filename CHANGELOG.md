@@ -6,6 +6,19 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-09
+
+### Changed
+
+- Release pipeline now publishes through PyPI trusted publishing.
+- GitHub Actions dependencies updated (checkout v7, upload-artifact v6, download-artifact v7,
+  action-gh-release v3, git-auto-commit-action v7).
+
+### Fixed
+
+- Cache directory test on Windows.
+- README code blocks are formatted by ruff.
+
 ## [0.1.0] - 2026-10-09
 
 ### Added
