@@ -1,5 +1,10 @@
 # adspub
 
+[![PyPI](https://img.shields.io/pypi/v/adspub.svg)](https://pypi.org/project/adspub/)
+[![Python](https://img.shields.io/pypi/pyversions/adspub.svg)](https://pypi.org/project/adspub/)
+[![CI](https://github.com/eivl/adspub/actions/workflows/ci.yml/badge.svg)](https://github.com/eivl/adspub/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Machine-readable view of the Google Ad Manager API version list, with a CLI
 built for both humans and AI agents.
 
@@ -11,6 +16,8 @@ JSON, caches it locally, and answers two questions reliably:
 
 - Which version is the latest?
 - Is the version I am pinned to still active, deprecated, or gone?
+
+![adspub demo](https://raw.githubusercontent.com/eivl/adspub/main/demo/demo.gif)
 
 Status rules:
 
@@ -219,6 +226,10 @@ uv run pytest --cov          # with coverage
 uv run ruff check . && uv run ruff format . && uv run mypy
 uv run --python 3.11 pytest  # any supported interpreter
 ```
+
+The demo GIF in this README is rendered from `demo/demo.tape` with
+[VHS](https://github.com/charmbracelet/vhs): run `vhs demo/demo.tape` locally, or
+trigger the "Render demo" workflow, which commits the updated GIF.
 
 Tests never touch the network. The parser is tested against
 `tests/fixtures/publisher.html`, a saved copy of the real page. A weekly GitHub

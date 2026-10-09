@@ -4,8 +4,9 @@ name: Publish to PyPI
 #   uv version --bump minor   # or patch / major
 #   git commit -am "Release v0.2.0" && git tag v0.2.0 && git push --tags
 #
-# Requires a PyPI "trusted publisher" configured for this repository with
-# workflow name publish.yml and environment name pypi. No API token needed.
+# Authentication: if the PYPI_API_TOKEN repository secret is set it is used;
+# otherwise the action falls back to PyPI trusted publishing (configure a
+# trusted publisher on PyPI with workflow publish.yml and environment pypi).
 
 on:
   push:
@@ -49,6 +50,9 @@ jobs:
           name: dist
           path: dist/
       - uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          skip-existing: true
       - name: Create GitHub release
         uses: softprops/action-gh-release@v2
         with:
