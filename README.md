@@ -185,10 +185,10 @@ from adspub import load_catalog
 
 
 async def main() -> None:
-    result = await load_catalog()             # cache-aware; fetches when stale
+    result = await load_catalog()  # cache-aware; fetches when stale
     catalog = result.catalog
-    print(result.source)                      # network | cache | stale-cache
-    print(catalog.latest.version)             # v202608
+    print(result.source)  # network | cache | stale-cache
+    print(catalog.latest.version)  # v202608
     print([v.version for v in catalog.deprecated])
 
     check = catalog.check("v202511")
@@ -203,7 +203,7 @@ Other entry points:
 ```python
 from adspub import fetch_catalog, parse_catalog
 
-catalog = await fetch_catalog()                           # no cache
+catalog = await fetch_catalog()  # no cache
 catalog = parse_catalog(html, source_url="https://...")  # from a string
 ```
 

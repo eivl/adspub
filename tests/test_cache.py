@@ -23,7 +23,8 @@ def test_default_cache_dir_honours_env(cache_dir: Path) -> None:
 
 def test_default_cache_dir_without_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ADSPUB_CACHE_DIR", raising=False)
-    assert default_cache_dir().name == "adspub"
+    # platformdirs nests the app name differently per OS (Windows adds a Cache suffix)
+    assert "adspub" in default_cache_dir().parts
 
 
 async def test_round_trip(cache_dir: Path, catalog: Catalog) -> None:
