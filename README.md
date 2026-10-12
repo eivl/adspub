@@ -31,6 +31,7 @@ Status rules:
 
 ```sh
 uv tool install adspub        # as a global CLI tool
+pipx install adspub           # as a global CLI tool (if you dont have uv)
 uvx adspub latest             # or run without installing
 pip install adspub            # or into a project
 ```
@@ -246,10 +247,6 @@ git commit -am "Release v$(uv version --short)"
 git tag "v$(uv version --short)"
 git push && git push --tags
 ```
-
-One-time setup: on PyPI, add a trusted publisher for this repository with
-workflow `publish.yml` and environment `pypi`, and create a `pypi` environment
-in the GitHub repository settings.
 
 ## License
 
